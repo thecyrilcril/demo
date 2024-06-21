@@ -60,6 +60,8 @@ final class Version20230906094949 extends AbstractMigration
         ");
         $this->addSql("ALTER TABLE book ALTER COLUMN promotionStatus SET NOT NULL");
         $this->addSql("ALTER TABLE book DROP COLUMN isPromoted");
+        $this->addSql("ALTER TABLE book ADD COLUMN slug VARCHAR(100) GENERATED ALWAYS AS ('book-'||id) STORED UNIQUE");
+        $this->addSql("ALTER TABLE book ALTER COLUMN slug SET NOT NULL");
     }
 
     public function down(Schema $schema): void
