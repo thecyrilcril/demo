@@ -32,6 +32,7 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Enum\BookPromotionStatus;
 
 /**
  * A book.
@@ -191,6 +192,32 @@ class Book
     )]
     #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read'])]
     public ?int $rating = null;
+
+    /**
+     * @see https://schema.org/promotionStatus
+     */
+    #[ApiProperty(
+        types: ['https://schema.org/promotionStatus'],
+        example: BookPromotionStatus::None->value
+    )]
+    #[Assert\NotNull]
+    #[Assert\Choice(choices: [BookPromotionStatus::None->value, BookPromotionStatus::Basic->value, BookPromotionStatus::Pro->value], message: 'Choose a valid promotion status.')]
+    #[ORM\Column(type: 'string', enumType: BookPromotionStatus::class)]
+    public ?BookPromotionStatus $promotionStatus = null;
+
+    /**
+     * @see https://schema.org/slug
+     */
+    #[ApiFilter(SearchFilter::class, strategy: SearchFilterInterface::STRATEGY_EXACT)]
+    #[ApiProperty(
+        types: ['https://schema.org/slug'],
+        example: 'book-101'
+    )]
+    #[Assert\NotBlank(allowNull: false)]
+    #[Assert\Length(min: 5)]
+    #[Assert\Regex(pattern: '/^[a-z0-9\-]+$/')]
+    #[ORM\Column(unique: true)]
+    public ?string $slug = null;
 
     public function __construct()
     {
