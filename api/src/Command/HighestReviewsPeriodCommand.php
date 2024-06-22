@@ -52,7 +52,7 @@ class HighestReviewsPeriodCommand extends Command
 
         $sql = sprintf('
             SELECT %s AS review_date, COUNT(*) AS review_count
-            FROM reviews
+            FROM review
             GROUP BY review_date
             ORDER BY review_count DESC, review_date DESC
             LIMIT 1
