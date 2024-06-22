@@ -202,6 +202,7 @@ class Book
     )]
     #[Assert\NotNull]
     #[Assert\Choice(choices: [BookPromotionStatus::None->value, BookPromotionStatus::Basic->value, BookPromotionStatus::Pro->value], message: 'Choose a valid promotion status.')]
+    #[Groups(groups: ['Book:read', 'Book:read:admin', 'Book:write'])]
     #[ORM\Column(type: 'string', enumType: BookPromotionStatus::class)]
     public ?BookPromotionStatus $promotionStatus = null;
 
@@ -216,6 +217,7 @@ class Book
     #[Assert\NotBlank(allowNull: false)]
     #[Assert\Length(min: 5)]
     #[Assert\Regex(pattern: '/^[a-z0-9\-]+$/')]
+    #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Book:write'])]
     #[ORM\Column(unique: true)]
     public ?string $slug = null;
 
